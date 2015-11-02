@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
+
+    <!---注册中心-->
+    <bean id="registry" class="com.lubbo.core.registry.ZKRegistry">
+        <constructor-arg value="${lubbo.zkRegistry.host}"/>
+    </bean>
+    <!--代理工厂-->
+    <bean id="javaProxyFactory" class="com.lubbo.common.proxy.JavaProxyFactory">
+    </bean>
+    <bean id="cglibProxyFactory" class="com.lubbo.common.proxy.CglibProxyFactory"></bean>
+    <bean id="javassistProxyFactory" class="com.lubbo.common.proxy.JavassistProxyFactory"></bean>
+    <bean id="delegateProxyFactory" class="com.lubbo.common.proxy.DelegateProxyFactory">
+        <property name="callerDelegate" ref="javaProxyFactory"></property>
+        <property name="proxyDelegate" ref="javaProxyFactory"></property>
+    </bean>
+
+    <!--传输中心-->
+    <bean id="nettyNioTransport" class="com.lubbo.core.network.netty.NettyNioTransport">
+        <property name="adaptor" ref="adaptor"></property>
+        <property name="workerThreads" value="${lubbo.core.workerThreads}"></property>
+    </bean>
+    <!--序列化工厂-->
+    <bean id="serializationFactory" class="com.lubbo.core.protocol.SerializationFactory"></bean>
+    <!--编解码器-->
+    <bean id="codec" class="com.lubbo.core.protocol.LubboCodec">
+        <property name="serializationFactory" ref="serializationFactory"></property>
+    </bean>
+    <bean  id="adaptor" class="com.lubbo.core.network.netty.NettyCodecAdaptor">
+        <property name="codec" ref="codec"></property>
+     </bean>
+</beans>

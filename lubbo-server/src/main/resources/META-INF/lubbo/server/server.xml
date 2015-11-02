@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
+    <!--server的配置ip和端口-->
+    <bean id="serverConfig" class="com.lubbo.server.ServerConfig">
+        <property name="ip" value="${lubbo.server.ip}"></property>
+        <property name="port" value="${lubbo.server.port}"></property>
+    </bean>
+    <!--@lubbo注解扫描器-->
+    <bean id="lubboScanner" class="com.lubbo.server.LubboScanner">
+        <property name="exposeListener" ref="multiExposerListener"></property>
+        <property name="invokerFactory" ref="proxyInvokerFactory"></property>
+        <property name="serverConfig" ref="serverConfig"></property>
+    </bean>
+    <!--server端的invoker工厂-->
+    <bean id="proxyInvokerFactory" class="com.lubbo.server.ProxyInvokerFactory">
+        <property name="deleteInvokerFactory" ref="delegateProxyFactory"></property>
+    </bean>
+    <!--server端的消息处理器-->
+    <bean id="serverMsgHandler" class="com.lubbo.server.network.SynServerMessageHandler">
+        <property name="invokerManager" ref="invokerExposerManager"></property>
+    </bean>
+    <!--传输层的抽象server-->
+    <bean id="server" factory-bean="nettyNioTransport" factory-method="getServer">
+        <constructor-arg ref="serverMsgHandler"/>
+    </bean>
+
+    <!--exposeListener-->
+    <bean id="invokerExposerManager" class="com.lubbo.server.listener.InvokerExposerManager"></bean>
+    <bean id="networkExposeListener" class="com.lubbo.server.listener.NetworkExposeListener">
+        <property name="server" ref="server"></property>
+    </bean>
+    <bean id="registryListener" class="com.lubbo.server.listener.RegistryListener">
+        <property name="registry" ref="registry"></property>
+    </bean>
+    <!--exposeListener的聚合listener-->
+    <bean id="multiExposerListener" class="com.lubbo.server.listener.MultiExposerListener">
+        <property name="exposeListeners">
+            <list>
+                <ref bean="invokerExposerManager"></ref>
+                <ref bean="networkExposeListener"></ref>
+                <ref bean="registryListener"></ref>
+            </list>
+        </property>
+    </bean>
+</beans>
