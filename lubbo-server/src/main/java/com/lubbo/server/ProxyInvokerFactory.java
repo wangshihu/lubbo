@@ -8,13 +8,14 @@ import com.lubbo.core.Result;
 import com.lubbo.core.exception.InvokeException;
 
 /**
- * Created by benchu on 15/11/1.
+ * @author  benchu
+ * @version on 15/11/1.
  */
 public class ProxyInvokerFactory implements InvokerFactory<ExposeConfig> {
     private ProxyFactory deleteInvokerFactory;
     @Override
     public Invoker newInvoker(ExposeConfig config) {
-        Class<?> serviceClass = config.getServiceCLass();
+        Class<?> serviceClass = config.getServiceClass();
         Object targetBean = config.getTargetBean();
         ProxyFactory.DelegateCaller delegateCaller= deleteInvokerFactory.getDelegateCaller(serviceClass);
         return new Invoker() {

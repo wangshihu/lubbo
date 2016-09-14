@@ -11,14 +11,17 @@ import org.junit.Before;
 import org.junit.Test;
 
 /**
- * Created by benchu on 15/10/21.
+ * @author benchu
+ * @since 0.1
  */
-public class RegistryTest {
-    ZKRegistry registry;
+public class RegistryTest extends AbstractZkTest {
+    ZKRegistryImpl registry;
+
     @Before
-    public void before(){
-        registry= new ZKRegistry("localhost:2181");
+    public void before() {
+        registry = new ZKRegistryImpl("localhost:" + TEST_ZK_PORT);
     }
+
     @Test
     public void testEphemeral() {
         registry.createEphemeralIfNeeded("/lubbo/com.HelloWorld/providers/192.160:80");
@@ -61,7 +64,5 @@ public class RegistryTest {
         Thread.sleep(500);
         Assert.assertFalse(providers.contains("/lubbo/com.HelloWorld/providers/192.160:81"));
     }
-
-
 
 }

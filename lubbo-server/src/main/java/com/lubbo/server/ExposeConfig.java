@@ -1,22 +1,23 @@
 package com.lubbo.server;
 
 /**
- * Created by benchu on 15/11/1.
+ * @author benchu
+ * @version on 15/11/1.
  */
 public class ExposeConfig {
-    private Class<?> serviceCLass;
+    private Class<?> serviceClass;
     private Object targetBean;
     private String service;
     private int port;
     private String ip;
 
-    public Class<?> getServiceCLass() {
-        return serviceCLass;
+    public Class<?> getServiceClass() {
+        return serviceClass;
     }
 
-    public void setServiceCLass(Class<?> serviceCLass) {
-        this.serviceCLass = serviceCLass;
-        this.service = serviceCLass.getName();
+    public void setServiceClass(Class<?> serviceClass) {
+        this.serviceClass = serviceClass;
+        this.service = serviceClass.getName();
     }
 
     public Object getTargetBean() {

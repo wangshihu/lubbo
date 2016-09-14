@@ -4,8 +4,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
-import javax.annotation.PostConstruct;
-
 import org.apache.curator.framework.CuratorFramework;
 import org.apache.curator.framework.CuratorFrameworkFactory;
 import org.apache.curator.framework.recipes.cache.PathChildrenCache;
@@ -13,17 +11,18 @@ import org.apache.curator.framework.recipes.cache.PathChildrenCacheListener;
 import org.apache.curator.retry.ExponentialBackoffRetry;
 import org.apache.zookeeper.CreateMode;
 import org.apache.zookeeper.KeeperException;
-import org.springframework.beans.factory.annotation.Value;
 
 /**
- * Created by benchu on 15/10/21.
+ * @author benchu
+ * @version on 15/10/21.
  */
-public class ZKRegistry implements Registry<PathChildrenCacheListener> {
+public class ZKRegistryImpl implements ZkRegistry<PathChildrenCacheListener> {
     private CuratorFramework client;
-    private final Map<String,PathChildrenCache> pathChildrenCacheMap = new ConcurrentHashMap<>();
+    private final Map<String, PathChildrenCache> pathChildrenCacheMap = new ConcurrentHashMap<>();
 
     private String host;
-    public ZKRegistry(String host){
+
+    public ZKRegistryImpl(String host) {
         this.host = host;
         client = CuratorFrameworkFactory.builder().connectString(host).sessionTimeoutMs(5000)
                      .retryPolicy(new ExponentialBackoffRetry(1000, 3)).build();
@@ -32,6 +31,7 @@ public class ZKRegistry implements Registry<PathChildrenCacheListener> {
         });
         client.start();
     }
+
     public void createPersistent(String path) {
         try {
             client.create().forPath(path);
@@ -41,7 +41,6 @@ public class ZKRegistry implements Registry<PathChildrenCacheListener> {
         }
     }
 
-    @Override
     public void createPersistentIfNeeded(String path) {
         try {
             client.create().creatingParentsIfNeeded().forPath(path);
@@ -60,7 +59,6 @@ public class ZKRegistry implements Registry<PathChildrenCacheListener> {
         }
     }
 
-    @Override
     public void createEphemeralIfNeeded(String path) {
         try {
             client.create().creatingParentsIfNeeded().withMode(CreateMode.EPHEMERAL).forPath(path);
@@ -89,8 +87,6 @@ public class ZKRegistry implements Registry<PathChildrenCacheListener> {
         }
     }
 
-
-
     public boolean isConnected() {
         return client.getZookeeperClient().isConnected();
     }
@@ -99,13 +95,13 @@ public class ZKRegistry implements Registry<PathChildrenCacheListener> {
         client.close();
     }
 
-    public void subscribe(String path,PathChildrenCacheListener listener){
+    public void subscribe(String path, PathChildrenCacheListener listener) {
         try {
-            PathChildrenCache cache  = pathChildrenCacheMap.get(path);
-            if(cache==null){
-                cache  = new PathChildrenCache(client,path,true);
+            PathChildrenCache cache = pathChildrenCacheMap.get(path);
+            if (cache == null) {
+                cache = new PathChildrenCache(client, path, true);
                 cache.start(PathChildrenCache.StartMode.POST_INITIALIZED_EVENT);
-                pathChildrenCacheMap.put(path,cache);
+                pathChildrenCacheMap.put(path, cache);
             }
             cache.getListenable().addListener(listener);
         } catch (Exception e) {

@@ -1,7 +1,8 @@
 package com.lubbo.core.network;
 
 /**
- * Created by benchu on 15/11/1.
+ * @author benchu
+ * @version on 15/11/1.
  */
 public final class ConnectionConstans {
     /**

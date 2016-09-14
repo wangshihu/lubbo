@@ -14,12 +14,13 @@ import io.netty.channel.EventLoopGroup;
 import io.netty.channel.nio.NioEventLoopGroup;
 
 /**
- * Created by benchu on 15/11/1.
+ * @author benchu
+ * @version on 15/11/1.
  */
 public class NettyNioTransport implements Closeable {
     private static final String BOSS_THREAD_NAME_PREFIX = "netty-boss";
 
-    private static final String WOKER_THREAD_NAME_PREFIX = "netty-worker";
+    private static final String WORKER_THREAD_NAME_PREFIX = "netty-worker";
 
     private EventLoopGroup bossGroup;
 
@@ -30,19 +31,18 @@ public class NettyNioTransport implements Closeable {
     private int bossThreads = ConnectionConstans.DEFAULT_BOSS_THREADS;
     private NettyCodecAdaptor adaptor;
 
-    public Server getServer(MsgHandler serverMsgHandler) {
+    public Server getServer(MsgHandler<?, ?> serverMsgHandler) {
         ensureBossGroup();
         ensureWorkerGroup();
-        ChannelProcessor processor = new ChannelProcessor(serverMsgHandler);
-        ChannelInitializer channelInitializer = new DefaultChannelInitializer(processor,adaptor);
+        ChannelProcessor<?, ?> processor = new ChannelProcessor<>(serverMsgHandler);
+        ChannelInitializer channelInitializer = new DefaultChannelInitializer(processor, adaptor);
         return new NettyServer(bossGroup, workerGroup, channelInitializer);
     }
 
-    public Client getClient(MsgHandler clientMsgHandler) {
+    public Client getClient(MsgHandler<?, ?> clientMsgHandler) {
         ensureWorkerGroup();
         ChannelProcessor<?, ?> processor = new ChannelProcessor<>(clientMsgHandler);
-        ChannelInitializer channelInitializer = new DefaultChannelInitializer(processor,adaptor);
-        return new NettyClient(channelInitializer, workerGroup);
+        return new NettyClient(new DefaultChannelInitializer(processor, adaptor), workerGroup);
     }
 
     private void ensureBossGroup() {
@@ -54,7 +54,7 @@ public class NettyNioTransport implements Closeable {
     private void ensureWorkerGroup() {
         if (this.workerGroup == null) {
             this.workerGroup =
-                new NioEventLoopGroup(this.workerThreads, new NamedThreadFactory(WOKER_THREAD_NAME_PREFIX));
+                new NioEventLoopGroup(this.workerThreads, new NamedThreadFactory(WORKER_THREAD_NAME_PREFIX));
         }
     }
 

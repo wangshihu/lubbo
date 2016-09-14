@@ -1,61 +1,72 @@
 package com.lubbo.core.protocol;
 
-import java.util.Arrays;
-
-import com.google.common.primitives.Ints;
-import com.google.common.primitives.Longs;
 import com.lubbo.core.message.LubboMessage;
 import com.lubbo.core.message.MessageStatus;
 import com.lubbo.core.message.MessageType;
 import com.lubbo.core.message.SerializeType;
 
+import io.netty.buffer.ByteBuf;
+
 /**
- * Created by benchu on 15/10/25.
+ * @author benchu
+ * @version on 15/10/25.
  */
 public class LubboCodec {
     private SerializationFactory serializationFactory;
-    public static final int TYPE_POS=4;
-    public static final int ACTION_POS=5;
-    public static final int STATUS_POS=6;
-    public static final int SERIALIZE_POS=6;
-    public static final int ID_POS=7;
-    public static final int DATA_LENGTH_POS=16;
+    public static final int TYPE_POS = 4;
+    public static final int ACTION_POS = 5;
+    public static final int STATUS_POS = 6;
+    public static final int SERIALIZE_POS = 6;
+    public static final int REQUEST_ID_POS = 7;
+    public static final int DATA_LENGTH_POS = 16;
+    public static final int HEAD_LENGTH = 128;
 
     /**
      * 讲lubboMessage解析成协议数组
-     * @param message
-     * @return
      */
-    public  byte[] encode(LubboMessage message){
+    public void encode(LubboMessage message,ByteBuf out) {
+        // 内容正文的contentLength不包含自身长度字段的长度，仅表示内容的长度，[0,INT_MAX)
+        int dataLength = 0;
+        // 表示数据包总长的值包含该字段的长度，表示整体的总长度，[4,INT_MAX)
+        int totalLength = 0;
+
+        // ---common header---
+        int totalLengthIndex = out.writerIndex();
+        out.writeInt(totalLength);// 此处只做占位 待数据写入完毕后修改此处的值
+
+        out.writeByte((byte) message.getMessageType().getId());
+        out.writeByte(message.getActionByte());
+        out.writeByte((byte) message.getSerializeType().getId());
+        out.writeByte((byte) message.getStatus().getId());
+        out.writeLong(message.getRequestId());
         byte[] data = serializationFactory.serialize(message.getSerializeType(), message.getValue());
-        byte[] result = new byte[data.length+24];
-        result[TYPE_POS]= (byte) message.getMessageType().getId();
-        result[ACTION_POS] = message.getActionByte();
-        result[SERIALIZE_POS] = (byte) message.getSerializeType().getId();
-        result[STATUS_POS] = (byte) message.getStatus().getId();
-        System.arraycopy(Longs.toByteArray(message.getId()),0,result,ID_POS,8);
-        System.arraycopy(Ints.toByteArray(data.length),0,result,DATA_LENGTH_POS,4);
-        return result;
+        out.writeInt(data.length);
+
+        out.writeBytes(data);
+        int endIndex = out.writerIndex();
+        totalLength = endIndex - totalLengthIndex;
+        out.setInt(totalLengthIndex, totalLength);// 修改totalLength的值
     }
 
     /**
-     * 讲协议数组解析成Lubbomessage
-     * @return
+     * 讲协议数组解析成LubboMessage
      */
-    public  LubboMessage decoder(byte[] bytes){
+    public LubboMessage decoder(ByteBuf in) {
         LubboMessage result = new LubboMessage();
         //获得基本信息
-        MessageType messageType = MessageType.get(bytes[TYPE_POS]);
+        int totalLength = in.readInt();
+        MessageType messageType = MessageType.get(in.readByte());
+        result.setRequest((in.readByte() == 0));
         result.setMessageType(messageType);
-        SerializeType serializeType = SerializeType.get(bytes[SERIALIZE_POS]);
+        SerializeType serializeType = SerializeType.get(in.readByte());
         result.setSerializeType(serializeType);
-        result.setStatus(MessageStatus.get(bytes[TYPE_POS]));
-        result.setRequest((bytes[ACTION_POS] == 0));
-        result.setId(Longs.fromByteArray(Arrays.copyOfRange(bytes, ID_POS, ID_POS + 8)));
+        result.setStatus(MessageStatus.get(in.readByte()));
+        result.setRequestId(in.readLong());
         ///获得实际内容.
-        int dataLength = Ints.fromByteArray(Arrays.copyOfRange(bytes,DATA_LENGTH_POS,DATA_LENGTH_POS+4));
+        int dataLength = in.readInt();
+
         byte[] data = new byte[dataLength];
-        System.arraycopy(bytes,24,data,0,dataLength);
+        in.readBytes(data);
         Object value = serializationFactory.unSerialize(serializeType, data, messageType.getClazz());
         result.setValue(value);
         return result;

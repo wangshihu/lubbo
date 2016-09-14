@@ -11,7 +11,8 @@ import com.lubbo.server.ExposeConfig;
 import com.lubbo.server.ExposeListener;
 
 /**
- * Created by benchu on 15/11/1.
+ * @author  benchu
+ * @version on 15/11/1.
  */
 public class InvokerExposerManager implements InvokerManager<Invocation> ,ExposeListener {
     private Map<String,Invoker> invokerMap = new ConcurrentHashMap<>();

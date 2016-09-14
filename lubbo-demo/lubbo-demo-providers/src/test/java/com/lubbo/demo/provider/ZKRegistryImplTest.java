@@ -5,17 +5,17 @@ import java.util.List;
 
 import org.junit.Test;
 
-import com.lubbo.core.registry.ZKRegistry;
+import com.lubbo.core.registry.ZKRegistryImpl;
 
 /**
  * Created by benchu on 15/10/31.
  */
-public class ZKRegistryTest {
-    ZKRegistry registry;
+public class ZKRegistryImplTest {
+    ZKRegistryImpl registry;
 
     @org.junit.Before
     public void before(){
-        registry= new ZKRegistry("localhost:2181");
+        registry= new ZKRegistryImpl("localhost:2181");
     }
     @Test
     public void test(){;

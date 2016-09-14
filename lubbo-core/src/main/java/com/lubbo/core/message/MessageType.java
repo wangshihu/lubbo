@@ -7,7 +7,8 @@ import com.lubbo.core.Invocation;
 import com.lubbo.core.Result;
 
 /**
- * Created by benchu on 15/10/21.
+ * @author  benchu
+ * @version on 15/10/21.
  */
 public enum  MessageType {
 

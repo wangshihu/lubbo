@@ -1,6 +1,5 @@
 package com.lubbo.server.listener;
 
-import java.io.Closeable;
 import java.io.IOException;
 import java.util.List;
 
@@ -10,7 +9,8 @@ import com.lubbo.server.ExposeListener;
 
 /**
  * 聚合exposerListener
- * Created by benchu on 15/11/1.
+ * @author  benchu
+ * @version on 15/11/1.
  */
 public class MultiExposerListener implements ExposeListener {
     List<ExposeListener> exposeListeners;

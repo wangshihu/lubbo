@@ -4,7 +4,8 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- * Created by benchu on 15/10/24.
+ * @author  benchu
+ * @version on 15/10/24.
  */
 public class Result {
     //0.正常 1.error 2.超时
@@ -86,7 +87,7 @@ public class Result {
         if (exception != null) {
             throw exception;
         } else if (status != 0) {
-            throw new Exception("remote execute error!  msg is :" + this.desc);
+            throw new Exception("remote messageReceived error!  msg is :" + this.desc);
         }
         return value;
     }

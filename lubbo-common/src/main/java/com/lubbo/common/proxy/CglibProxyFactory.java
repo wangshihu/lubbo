@@ -15,14 +15,6 @@
  */
 package com.lubbo.common.proxy;
 
-import com.lubbo.common.proxy.AbstractProxyFactory;
-
-
-
-import com.lubbo.common.proxy.AbstractProxyFactory;
-
-
-
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
@@ -111,9 +103,6 @@ public class CglibProxyFactory extends AbstractProxyFactory implements ProxyFact
                 throw e.getCause();
             }
         }
-
-
-
 
     }
 }

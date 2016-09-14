@@ -1,32 +1,32 @@
 package com.lubbo.core.message;
 
 /**
- * Created by benchu on 15/10/22.
+ * @author benchu
+ * @version on 15/10/22.
  */
 public class LubboMessage<E> {
     private MessageType messageType;
     private boolean request;
     private MessageStatus status;
     private SerializeType serializeType;
-    private long id;
-    private int dataLength;
+    private long requestId;
     private E value;
 
     public LubboMessage() {
     }
 
-    public LubboMessage(MessageType messageType, boolean request, MessageStatus status, SerializeType serializeType
-                        ) {
+    public LubboMessage(MessageType messageType, boolean request, MessageStatus status, SerializeType serializeType) {
         this.messageType = messageType;
         this.request = request;
         this.status = status;
         this.serializeType = serializeType;
         //TODO generateId
     }
-    public LubboMessage(LubboMessage request,MessageStatus status) {
-        this.id = request.id;
+
+    public LubboMessage(LubboMessage request, MessageStatus status) {
+        this.requestId = request.requestId;
         this.messageType = request.messageType;
-        this.serializeType  = request.serializeType;
+        this.serializeType = request.serializeType;
         this.request = false;
         this.status = status;
     }
@@ -63,21 +63,14 @@ public class LubboMessage<E> {
         this.serializeType = serializeType;
     }
 
-    public long getId() {
-        return id;
+    public long getRequestId() {
+        return requestId;
     }
 
-    public void setId(long id) {
-        this.id = id;
+    public void setRequestId(long requestId) {
+        this.requestId = requestId;
     }
 
-    public int getDataLength() {
-        return dataLength;
-    }
-
-    public void setDataLength(int dataLength) {
-        this.dataLength = dataLength;
-    }
 
     public E getValue() {
         return value;
@@ -88,11 +81,11 @@ public class LubboMessage<E> {
     }
 
     public byte getActionByte() {
-        if(request)
+        if (request) {
             return 0;
-        else
+        } else {
             return 1;
+        }
     }
-
 
 }

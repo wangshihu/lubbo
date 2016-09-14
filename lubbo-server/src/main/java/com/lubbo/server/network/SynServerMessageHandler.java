@@ -9,13 +9,14 @@ import com.lubbo.core.message.LubboMessage;
 import com.lubbo.core.network.MsgHandlerContext;
 
 /**
- * Created by benchu on 15/11/1.
+ * @author benchu
+ * @version on 15/11/1.
  */
 public class SynServerMessageHandler extends  AbstractServerMessageHandler {
     //fixme 处理任务的线程池
     private ExecutorService executorService= Executors.newCachedThreadPool();
     @Override
-    public void execute(LubboMessage<Invocation> message, MsgHandlerContext<LubboMessage<Result>> ctx) {
+    public void messageReceived(LubboMessage<Invocation> message, MsgHandlerContext<LubboMessage<Result>> ctx) {
         executorService.execute(() -> handlerMessage(message,ctx));
     }
 }

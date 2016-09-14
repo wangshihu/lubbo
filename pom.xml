@@ -22,6 +22,7 @@
         <slf4j.version>1.7.12</slf4j.version>
         <spring.version>4.1.7.RELEASE</spring.version>
         <aspectj.version>1.8.7</aspectj.version>
+        <netty.version>4.0.28.Final</netty.version>
     </properties>
     <dependencyManagement>
         <dependencies>
@@ -39,6 +40,12 @@
                 <groupId>org.springframework</groupId>
                 <artifactId>spring-aop</artifactId>
                 <version>${spring.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.springframework</groupId>
+                <artifactId>spring-test</artifactId>
+                <version>${spring.version}</version>
+                <scope>test</scope>
             </dependency>
             <dependency>
                 <groupId>org.aspectj</groupId>
@@ -112,7 +119,7 @@
             <dependency>
                 <groupId>io.netty</groupId>
                 <artifactId>netty-all</artifactId>
-                <version>5.0.0.Alpha1</version>
+                <version>${netty.version}</version>
             </dependency>
             <dependency>
                 <groupId>junit</groupId>
@@ -124,6 +131,23 @@
                 <groupId>org.javassist</groupId>
                 <artifactId>javassist</artifactId>
                 <version>3.18.1-GA</version>
+            </dependency>
+
+            <dependency>
+                <groupId>junit</groupId>
+                <artifactId>junit</artifactId>
+                <scope>test</scope>
+            </dependency>
+
+            <dependency>
+                <groupId>org.apache.commons</groupId>
+                <artifactId>commons-lang3</artifactId>
+                <version>3.2.1</version>
+            </dependency>
+            <dependency>
+                <groupId>commons-io</groupId>
+                <artifactId>commons-io</artifactId>
+                <version>2.4</version>
             </dependency>
         </dependencies>
     </dependencyManagement>

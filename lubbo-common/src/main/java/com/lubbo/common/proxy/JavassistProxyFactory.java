@@ -34,29 +34,29 @@ import javassist.CtNewMethod;
 import javassist.NotFoundException;
 
 /**
- * 使用Javassit实现的ProxyFactory,copy from tesla
+ * 使用Javassit实现的ProxyFactory,
  *
- * @author mozhu
+ * @author benchu
  *
  */
 public class JavassistProxyFactory extends AbstractProxyFactory {
 
     private final Logger logger = LoggerFactory.getLogger(getClass());
 
-    private int proxyConter = 0;
+    private int proxyCounter = 0;
 
     private int counter = 0;
 
     @SuppressWarnings("unchecked")
     @Override
-    public <T> T proxy(Class<T> clazz, InvocationHandler invcationHandler) {
+    public <T> T proxy(Class<T> clazz, InvocationHandler invocationHandler) {
         Method[] methods = super.getMethodsCall(clazz).toArray(new Method[0]);
         ClassPool pool = ClassPool.getDefault();
 
         try {
             CtClass ctClazz = pool.get(clazz.getCanonicalName());
 
-            CtClass proxyClass = pool.makeClass(clazz.getCanonicalName() + "_JavassistProxy" + proxyConter++);
+            CtClass proxyClass = pool.makeClass(clazz.getCanonicalName() + "_JavassistProxy" + proxyCounter++);
             if (clazz.isInterface()) {
                 proxyClass.addInterface(ctClazz);
             } else {
@@ -74,15 +74,15 @@ public class JavassistProxyFactory extends AbstractProxyFactory {
             proxyClass.addField(methodArrayField);
 
             // make constructor
-            CtConstructor construtor = new CtConstructor(new CtClass[] { invocationHandlerClass, methodArrayClass },
+            CtConstructor constructor = new CtConstructor(new CtClass[] { invocationHandlerClass, methodArrayClass },
                     proxyClass);
             StringBuilder builder = new StringBuilder();
             builder.append("{\n");
             builder.append("this.").append(invocationHandlerFieldName).append(" = $1;\n");
             builder.append("this.").append(methodArrayFieldName).append(" = $2;\n");
             builder.append("}");
-            construtor.setBody(builder.toString());
-            proxyClass.addConstructor(construtor);
+            constructor.setBody(builder.toString());
+            proxyClass.addConstructor(constructor);
 
             // make methods
             this.makeProxyMethods(proxyClass, methods, invocationHandlerFieldName, methodArrayFieldName);
@@ -96,7 +96,7 @@ public class JavassistProxyFactory extends AbstractProxyFactory {
                 }
             }
 
-            return (T) proxyClass.toClass().getConstructors()[0].newInstance(invcationHandler, methods);
+            return (T) proxyClass.toClass().getConstructors()[0].newInstance(invocationHandler, methods);
         } catch (CannotCompileException | NotFoundException | InstantiationException | IllegalAccessException
                 | IllegalArgumentException | InvocationTargetException | SecurityException e) {
             throw new ProxyException(e);
@@ -326,8 +326,7 @@ public class JavassistProxyFactory extends AbstractProxyFactory {
         } else {
             wrapperClassName = Character.toUpperCase(primitiveTypeName.charAt(0)) + primitiveTypeName.substring(1);
         }
-        return new StringBuilder().append(wrapperClassName).append(".valueOf(").append(parameterName).append(")")
-                .toString();
+        return wrapperClassName + ".valueOf(" + parameterName + ")";
 
     }
 }

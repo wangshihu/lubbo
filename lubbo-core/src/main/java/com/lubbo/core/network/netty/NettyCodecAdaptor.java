@@ -47,8 +47,7 @@ public class NettyCodecAdaptor {
 
         @Override
         protected void encode(ChannelHandlerContext ctx, LubboMessage msg, ByteBuf out) throws Exception {
-            byte[] bytes = codec.encode(msg);
-            out.writeBytes(bytes);
+           codec.encode(msg,out);
         }
 
     }
@@ -61,16 +60,14 @@ public class NettyCodecAdaptor {
 
         private LubboDecoder() {
             // 写入的头部的长度值包含自身字段长度
-            super(Integer.MAX_VALUE, 0, 4, 0, 4);
+            super(Integer.MAX_VALUE, 0, 4, -4, 0);
         }
 
         @Override
         protected Object decode(ChannelHandlerContext ctx, ByteBuf in) throws Exception {
             ByteBuf frame = (ByteBuf) super.decode(ctx, in);
             if (frame != null) {
-                byte[] req = new byte[frame.readableBytes()];
-                frame.readBytes(req);
-                return codec.decoder(req);
+                return codec.decoder(frame);
             }
             return null;
         }

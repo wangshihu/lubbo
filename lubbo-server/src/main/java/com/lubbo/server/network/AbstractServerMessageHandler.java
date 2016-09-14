@@ -14,20 +14,22 @@ import com.lubbo.core.network.MsgHandlerContext;
 
 /**
  * 处理invocation 的请求
- * Created by benchu on 15/11/1.
+ *
+ * @author benchu
+ * @version on 15/11/1.
  */
-public abstract class AbstractServerMessageHandler implements MsgHandler<LubboMessage<Invocation>,
-                                                                             LubboMessage<Result>>{
+public abstract class AbstractServerMessageHandler implements
+    MsgHandler<LubboMessage<Invocation>, LubboMessage<Result>> {
     private static Logger logger = LoggerFactory.getLogger(AbstractServerMessageHandler.class);
 
     private InvokerManager<Invocation> invokerManager;
 
-    protected void handlerMessage(LubboMessage<Invocation> request, MsgHandlerContext<LubboMessage<Result>> ctx){
+    protected void handlerMessage(LubboMessage<Invocation> request, MsgHandlerContext<LubboMessage<Result>> ctx) {
         Invocation invocation = request.getValue();
         Invoker invoker = invokerManager.getInvoker(invocation);
         Result result = invoker.invoke(invocation);
         //fixme 根据result的状态设置消息的状态.
-        LubboMessage<Result> response = new LubboMessage<>(request,MessageStatus.NORMAL);
+        LubboMessage<Result> response = new LubboMessage<>(request, MessageStatus.NORMAL);
         response.setValue(result);
         ctx.respond(response);
     }

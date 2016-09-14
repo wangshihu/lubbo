@@ -4,22 +4,22 @@
        xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
     <!--server的配置ip和端口-->
     <bean id="serverConfig" class="com.lubbo.server.ServerConfig">
-        <property name="ip" value="${lubbo.server.ip}"></property>
-        <property name="port" value="${lubbo.server.port}"></property>
+        <property name="ip" value="${lubbo.server.ip}"/>
+        <property name="port" value="${lubbo.server.port}"/>
     </bean>
     <!--@lubbo注解扫描器-->
     <bean id="lubboScanner" class="com.lubbo.server.LubboScanner">
-        <property name="exposeListener" ref="multiExposerListener"></property>
-        <property name="invokerFactory" ref="proxyInvokerFactory"></property>
-        <property name="serverConfig" ref="serverConfig"></property>
+        <property name="exposeListener" ref="multiExposerListener"/>
+        <property name="invokerFactory" ref="proxyInvokerFactory"/>
+        <property name="serverConfig" ref="serverConfig"/>
     </bean>
     <!--server端的invoker工厂-->
     <bean id="proxyInvokerFactory" class="com.lubbo.server.ProxyInvokerFactory">
-        <property name="deleteInvokerFactory" ref="delegateProxyFactory"></property>
+        <property name="deleteInvokerFactory" ref="delegateProxyFactory"/>
     </bean>
     <!--server端的消息处理器-->
     <bean id="serverMsgHandler" class="com.lubbo.server.network.SynServerMessageHandler">
-        <property name="invokerManager" ref="invokerExposerManager"></property>
+        <property name="invokerManager" ref="invokerExposerManager"/>
     </bean>
     <!--传输层的抽象server-->
     <bean id="server" factory-bean="nettyNioTransport" factory-method="getServer">
@@ -27,20 +27,20 @@
     </bean>
 
     <!--exposeListener-->
-    <bean id="invokerExposerManager" class="com.lubbo.server.listener.InvokerExposerManager"></bean>
+    <bean id="invokerExposerManager" class="com.lubbo.server.listener.InvokerExposerManager"/>
     <bean id="networkExposeListener" class="com.lubbo.server.listener.NetworkExposeListener">
-        <property name="server" ref="server"></property>
+        <property name="server" ref="server"/>
     </bean>
     <bean id="registryListener" class="com.lubbo.server.listener.RegistryListener">
-        <property name="registry" ref="registry"></property>
+        <property name="registry" ref="registry"/>
     </bean>
     <!--exposeListener的聚合listener-->
     <bean id="multiExposerListener" class="com.lubbo.server.listener.MultiExposerListener">
         <property name="exposeListeners">
             <list>
-                <ref bean="invokerExposerManager"></ref>
-                <ref bean="networkExposeListener"></ref>
-                <ref bean="registryListener"></ref>
+                <ref bean="invokerExposerManager"/>
+                <ref bean="networkExposeListener"/>
+                <ref bean="registryListener"/>
             </list>
         </property>
     </bean>

@@ -5,7 +5,8 @@ import java.io.IOException;
 import com.lubbo.core.Invoker;
 
 /**
- * Created by benchu on 15/11/1.
+ * @author  benchu
+ * @version on 15/11/1.
  */
 public class LubboExposer implements Exposer {
     private ExposeListener exposeListener;

@@ -1,13 +1,13 @@
 package com.lubbo.server;
 
-import java.util.Properties;
-
 /**
- * Created by benchu on 15/10/24.
+ * @author benchu
+ * @version on 15/10/24.
  */
 public class ServerConfig {
-    public String ip ;
-    public int port ;
+    public String ip;
+    public int port;
+
     public ServerConfig() {
     }
 

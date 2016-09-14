@@ -6,7 +6,8 @@ import org.slf4j.LoggerFactory;
 import com.lubbo.server.Launcher;
 
 /**
- * Created by benchu on 15/10/31.
+ * @author  benchu
+ * @version on 15/10/31.
  */
 public class LauncherTest {
     private static Logger logger = LoggerFactory.getLogger(LauncherTest.class);

@@ -1,6 +1,5 @@
 package com.lubbo.core.network.netty;
 
-import java.io.Closeable;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
@@ -20,7 +19,8 @@ import io.netty.channel.EventLoopGroup;
 import io.netty.channel.socket.nio.NioServerSocketChannel;
 
 /**
- * Created by benchu on 15/11/1.
+ * @author  benchu
+ * @version on 15/11/1.
  */
 public class NettyServer implements Server {
     private Logger logger = LoggerFactory.getLogger(getClass());

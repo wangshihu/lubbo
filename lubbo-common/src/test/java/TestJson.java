@@ -1,8 +1,6 @@
 import java.util.Date;
 
 import com.alibaba.fastjson.JSON;
-import com.google.common.primitives.Bytes;
-import com.google.common.primitives.Ints;
 /**
  * Created by benchu on 15/10/21.
  */
