@@ -1,6 +1,5 @@
 package com.lubbo.server;
 
-import org.junit.BeforeClass;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
@@ -17,10 +16,6 @@ public class AbstractTest {
 
     @Autowired
     protected LubboScanner lubboScanner;
-    @BeforeClass
-    public static void beforeClass(){
-        Launcher.init();
-    }
 
 
 }

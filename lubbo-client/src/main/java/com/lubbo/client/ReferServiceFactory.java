@@ -3,7 +3,6 @@ package com.lubbo.client;
 import java.lang.reflect.InvocationHandler;
 
 import org.springframework.beans.factory.FactoryBean;
-import org.springframework.beans.factory.annotation.Autowired;
 
 import com.lubbo.client.cluster.InvokeInvocationHandler;
 import com.lubbo.common.proxy.ProxyFactory;
@@ -11,13 +10,14 @@ import com.lubbo.core.Invoker;
 import com.lubbo.core.InvokerFactory;
 
 /**
- * Created by benchu on 15/10/24.
+ * @author  benchu
+ * @version on 15/10/24.
  */
 
 public class ReferServiceFactory<T> implements FactoryBean<T> {
 
     private ProxyFactory proxyFactory;
-    private InvokerFactory invokerFactory;
+    private InvokerFactory<ReferConfig> invokerFactory;
     private Class<T> targetClass;
 
     @Override
@@ -27,7 +27,7 @@ public class ReferServiceFactory<T> implements FactoryBean<T> {
 
 
     private T newInstance(){
-        ReferConfig referConfig = new ReferConfig(targetClass.getName());
+        ReferConfig<T> referConfig = new ReferConfig<>(targetClass);
         Invoker invoker = invokerFactory.newInvoker(referConfig);
         InvocationHandler invocationHandler = new InvokeInvocationHandler(targetClass.getName(),invoker);
         return proxyFactory.proxy(targetClass,invocationHandler);

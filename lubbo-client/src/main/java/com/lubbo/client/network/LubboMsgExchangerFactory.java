@@ -15,7 +15,7 @@
  */
 package com.lubbo.client.network;
 
-import com.lubbo.client.cluster.Provider;
+import com.lubbo.client.provider.Provider;
 import com.lubbo.core.Invocation;
 import com.lubbo.core.Result;
 import com.lubbo.core.message.LubboMessage;
@@ -38,8 +38,9 @@ public class LubboMsgExchangerFactory implements ExchangerFactory<Invocation, Re
     @Override
     public Exchanger<Invocation, Result> newExchanger(Provider provider) {
         Channel channel = this.client.connect(provider.getAddress());
-        LubboExchanger exchanger = new LubboExchanger(provider,channel,responseFutureFactory);
-
+        LubboExchanger exchanger = new LubboExchanger();
+        exchanger.setChannel(channel);
+        exchanger.setResponseFutureFactory(responseFutureFactory);
         return exchanger;
     }
 

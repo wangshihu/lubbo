@@ -3,6 +3,7 @@ package com.lubbo.core.network.netty;
 import java.io.IOException;
 import java.net.InetSocketAddress;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import com.lubbo.core.network.Channel;
@@ -15,10 +16,10 @@ import io.netty.channel.ChannelOption;
 import io.netty.channel.EventLoopGroup;
 import io.netty.channel.socket.SocketChannel;
 import io.netty.channel.socket.nio.NioSocketChannel;
-import io.netty.util.internal.chmv8.ConcurrentHashMapV8;
 
 /**
- * Created by benchu on 15/11/1.
+ * @author benchu
+ * @version on 15/11/1.
  */
 public class NettyClient implements Client {
     private Bootstrap bootstrap;
@@ -31,7 +32,7 @@ public class NettyClient implements Client {
 
     private final AtomicInteger channelSeq = new AtomicInteger();
 
-    private final Map<Integer, Channel> connectedChannels = new ConcurrentHashMapV8<>();
+    private final Map<Integer, Channel> connectedChannels = new ConcurrentHashMap<>();
 
     NettyClient(ChannelInitializer<SocketChannel> channelInitializer, EventLoopGroup workerGroup) {
         this.channelInitializer = channelInitializer;

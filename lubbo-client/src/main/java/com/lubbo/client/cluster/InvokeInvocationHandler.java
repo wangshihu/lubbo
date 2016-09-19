@@ -8,7 +8,8 @@ import com.lubbo.core.Invoker;
 import com.lubbo.core.Result;
 
 /**
- * Created by benchu on 15/10/24.
+ * @author  benchu
+ * @version on 15/10/24.
  */
 public class InvokeInvocationHandler implements InvocationHandler {
 

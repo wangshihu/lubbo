@@ -2,6 +2,7 @@ package com.lubbo.server.listener;
 
 import java.io.IOException;
 
+import com.lubbo.common.LubboConstants;
 import com.lubbo.core.Invoker;
 import com.lubbo.core.registry.URLS;
 import com.lubbo.core.registry.ZkRegistry;
@@ -17,12 +18,12 @@ public class RegistryListener implements ExposeListener {
 
     @Override
     public void expose(Invoker invoker, ExposeConfig exposeConfig) {
-        String serviceUrl = URLS.getServiceUrl(exposeConfig.getService());
+        String serviceUrl = URLS.serviceUrl(exposeConfig.getService());
         registry.createPersistentIfNeeded(serviceUrl + "/providers");
         registry.createPersistentIfNeeded(serviceUrl + "/consumers");
         //插入当前节点.
-        String ipUrl = URLS.getIpUrl(serviceUrl, true, exposeConfig.getIp());
-        String serverHost = ipUrl + ":" + exposeConfig.getPort();
+        String ipUrl = URLS.providerIp(serviceUrl, LubboConstants.LOCAL_HOST);
+        String serverHost = ipUrl + ":" + LubboConstants.LUBBO_PORT;
         registry.createEphemeral(serverHost);
     }
 

@@ -5,4 +5,5 @@ package com.lubbo.demo.api;
  */
 public interface UserService {
 
+
 }

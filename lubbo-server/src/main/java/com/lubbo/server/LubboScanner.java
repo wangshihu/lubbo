@@ -26,10 +26,10 @@ public class LubboScanner implements ApplicationContextAware,DisposableBean {
     private ApplicationContext applicationContext;
     private static Logger logger = LoggerFactory.getLogger(LubboScanner.class);
 
-    private InvokerFactory invokerFactory;
+    private InvokerFactory<ExposeConfig> invokerFactory;
     private ExposeListener exposeListener;
-    private ServerConfig serverConfig;
     private Map<String,Exposer> exposerMap = new ConcurrentHashMap<>();
+
     @PostConstruct
     public void init(){
         scanLubboBean();
@@ -58,8 +58,6 @@ public class LubboScanner implements ApplicationContextAware,DisposableBean {
         ExposeConfig exposeConfig = new ExposeConfig();
         exposeConfig.setServiceClass(service);
         exposeConfig.setTargetBean(bean);
-        exposeConfig.setIp(serverConfig.getIp());
-        exposeConfig.setPort(serverConfig.getPort());
         return exposeConfig;
     }
 
@@ -74,6 +72,10 @@ public class LubboScanner implements ApplicationContextAware,DisposableBean {
             exposer.close();
     }
 
+    public Map<String, Exposer> getExposerMap() {
+        return exposerMap;
+    }
+
     public void setInvokerFactory(InvokerFactory invokerFactory) {
         this.invokerFactory = invokerFactory;
     }
@@ -82,7 +84,4 @@ public class LubboScanner implements ApplicationContextAware,DisposableBean {
         this.exposeListener = exposeListener;
     }
 
-    public void setServerConfig(ServerConfig serverConfig) {
-        this.serverConfig = serverConfig;
-    }
 }

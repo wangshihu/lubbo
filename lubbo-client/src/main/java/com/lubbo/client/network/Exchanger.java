@@ -1,18 +1,17 @@
 package com.lubbo.client.network;
 
 import java.io.Closeable;
-
-import com.lubbo.client.cluster.Provider;
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.Future;
 
 /**
- * Created by benchu on 15/11/1.
+ * @author benchu
+ * @version on 15/11/1.
  */
-public interface Exchanger<I,O> extends Closeable {
-    ResponseFuture<O> sendMessage(I message);
-
+public interface Exchanger<I, O> extends Closeable {
+    CompletableFuture<O> send(I message);
 
     boolean isAvailable();
 
-    Provider getProvider();
-
+    Future<Void> asyncClose();
 }

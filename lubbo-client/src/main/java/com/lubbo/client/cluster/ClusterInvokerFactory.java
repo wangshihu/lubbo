@@ -1,35 +1,34 @@
-package com.lubbo.client.network;
+package com.lubbo.client.cluster;
 
 import java.util.List;
 
 import org.apache.curator.framework.recipes.cache.PathChildrenCacheListener;
 
 import com.lubbo.client.ReferConfig;
-import com.lubbo.common.Constants;
+import com.lubbo.common.LubboConstants;
 import com.lubbo.core.Invoker;
 import com.lubbo.core.InvokerFactory;
-import com.lubbo.core.registry.Registry;
 import com.lubbo.core.registry.URLS;
+import com.lubbo.core.registry.ZkRegistry;
 
 /**
- * Created by benchu on 15/10/24.
+ * @author benchu
+ * @version on 15/10/24.
  */
-public class ClientInvokerFactory implements InvokerFactory<ReferConfig> {
-    //FIXME 客户端的ip
-    private String ip="127.0.0.1";
+public class ClusterInvokerFactory implements InvokerFactory<ReferConfig> {
 
-    private Registry registry;
+    private ZkRegistry<PathChildrenCacheListener> registry;
 
     @Override
     public Invoker newInvoker(ReferConfig referConfig) {
-        String serviceUrl = URLS.getServiceUrl(referConfig.getService());
-        String ipUrl = URLS.getIpUrl(serviceUrl,false,ip);
+        String serviceUrl = URLS.serviceUrl(referConfig.getTargetClass().getName());
+        String ipUrl = URLS.consumerIp(serviceUrl, LubboConstants.LOCAL_HOST);
         registry.createEphemeralIfNeeded(ipUrl);
-        String listenerPath = serviceUrl+ Constants.ZK_SEPARATOR+"providers";
+        String listenerPath = serviceUrl + LubboConstants.ZK_SEPARATOR + "providers";
         List<String> providers = registry.getChildren(listenerPath);
-        ClientInvoker invoker = new ClientInvoker(providers);
-        registry.subscribe(listenerPath, (PathChildrenCacheListener) (client, event) -> {
-            switch (event.getType()){
+        ClusterInvoker invoker = new ClusterInvoker(providers);
+        registry.subscribe(listenerPath, (client, event) -> {
+            switch (event.getType()) {
                 case CHILD_ADDED:
                     invoker.getCluster().addProvider(event.getData());
                     break;
@@ -46,11 +45,11 @@ public class ClientInvokerFactory implements InvokerFactory<ReferConfig> {
         return invoker;
     }
 
-    public Registry getRegistry() {
+    public ZkRegistry<PathChildrenCacheListener> getRegistry() {
         return registry;
     }
 
-    public void setRegistry(Registry registry) {
+    public void setRegistry(ZkRegistry registry) {
         this.registry = registry;
     }
 }

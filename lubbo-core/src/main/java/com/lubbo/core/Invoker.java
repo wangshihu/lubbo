@@ -1,8 +1,11 @@
 package com.lubbo.core;
 
+import java.io.Closeable;
+
 /**
- * Created by benchu on 15/10/24.
+ * @author  benchu
+ * @version on 15/10/24.
  */
-public interface Invoker {
+public interface Invoker extends Closeable{
     Result invoke(Invocation invocation);
 }

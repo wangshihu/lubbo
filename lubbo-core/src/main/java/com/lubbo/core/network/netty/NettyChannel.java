@@ -41,7 +41,7 @@ class NettyChannel implements Channel {
     }
 
     @Override
-    public boolean isAvaiable() {
+    public boolean isAvailable() {
         return channel.isActive() && channel.isOpen();
     }
 

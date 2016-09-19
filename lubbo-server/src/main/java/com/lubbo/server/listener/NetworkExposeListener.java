@@ -2,6 +2,7 @@ package com.lubbo.server.listener;
 
 import java.io.IOException;
 
+import com.lubbo.common.LubboConstants;
 import com.lubbo.core.Invoker;
 import com.lubbo.core.network.Server;
 import com.lubbo.server.ExposeConfig;
@@ -15,7 +16,7 @@ public class NetworkExposeListener implements ExposeListener{
     private Server server;
     @Override
     public void expose(Invoker invoker, ExposeConfig exposeConfig) {
-        server.bind(exposeConfig.getPort());
+        server.bind(LubboConstants.LUBBO_PORT);
     }
 
     @Override

@@ -6,7 +6,6 @@ package com.lubbo.core.message;
  */
 public class LubboMessage<E> {
     private MessageType messageType;
-    private boolean request;
     private MessageStatus status;
     private SerializeType serializeType;
     private long requestId;
@@ -15,19 +14,16 @@ public class LubboMessage<E> {
     public LubboMessage() {
     }
 
-    public LubboMessage(MessageType messageType, boolean request, MessageStatus status, SerializeType serializeType) {
+    public LubboMessage(MessageType messageType,  MessageStatus status, SerializeType serializeType) {
         this.messageType = messageType;
-        this.request = request;
         this.status = status;
         this.serializeType = serializeType;
-        //TODO generateId
     }
 
     public LubboMessage(LubboMessage request, MessageStatus status) {
         this.requestId = request.requestId;
         this.messageType = request.messageType;
         this.serializeType = request.serializeType;
-        this.request = false;
         this.status = status;
     }
 
@@ -37,14 +33,6 @@ public class LubboMessage<E> {
 
     public void setMessageType(MessageType messageType) {
         this.messageType = messageType;
-    }
-
-    public boolean isRequest() {
-        return request;
-    }
-
-    public void setRequest(boolean request) {
-        this.request = request;
     }
 
     public MessageStatus getStatus() {

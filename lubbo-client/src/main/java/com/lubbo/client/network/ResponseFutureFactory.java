@@ -1,8 +1,11 @@
 package com.lubbo.client.network;
 
+import java.util.concurrent.CompletableFuture;
+
 /**
- * Created by benchu on 15/11/1.
+ * @author benchu
+ * @version on 15/11/1.
  */
-public interface ResponseFutureFactory<I,O> {
-    ResponseFuture<O> newResponseFuture(I msg);
+public interface ResponseFutureFactory<I, O> {
+    CompletableFuture<O> newResponseFuture(I msg);
 }

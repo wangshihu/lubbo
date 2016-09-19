@@ -12,14 +12,18 @@ import com.google.common.base.Preconditions;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Lists;
 import com.lubbo.client.network.NettyClient;
+import com.lubbo.client.provider.Provider;
+import com.lubbo.core.network.Client;
+import com.lubbo.core.network.netty.NettyClient;
 
 /**
- * Created by benchu on 15/10/25.
+ * @author  benchu
+ * @version on 15/10/25.
  */
 public class NettyCluster implements Cluster{
     private static Logger logger = LoggerFactory.getLogger(NettyCluster.class);
     private List<String> providers ;
-    private Map<String, NettyClient> nettyClientMap = new ConcurrentHashMap<>();
+    private Map<String, Client> nettyClientMap = new ConcurrentHashMap<>();
     int index = 0;
 
     public NettyCluster(List<String> providers) {
@@ -77,7 +81,6 @@ public class NettyCluster implements Cluster{
     }
 
     public void addProvider(String providerHost) {
-
         providers.add(providerHost);
         NettyClient nettyClient = new NettyClient(providerHost);
         nettyClient.start();

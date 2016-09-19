@@ -18,5 +18,5 @@ public interface Channel extends Closeable {
 
     void writeAndFlush(Object obj);
 
-    boolean isAvaiable();
+    boolean isAvailable();
 }

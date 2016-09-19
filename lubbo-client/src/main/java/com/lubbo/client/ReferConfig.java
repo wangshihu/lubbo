@@ -1,20 +1,21 @@
 package com.lubbo.client;
 
 /**
- * Created by benchu on 15/10/24.
+ * @author  benchu
+ * @version on 15/10/24.
  */
-public class ReferConfig {
-    private String service;
+public class ReferConfig<T> {
+    private Class<T> targetClass;
 
-    public ReferConfig(String service) {
-        this.service = service;
+    public ReferConfig(Class<T> targetClass) {
+        this.targetClass = targetClass;
     }
 
-    public String getService() {
-        return service;
+    public Class<T> getTargetClass() {
+        return targetClass;
     }
 
-    public void setService(String service) {
-        this.service = service;
+    public void setTargetClass(Class<T> targetClass) {
+        this.targetClass = targetClass;
     }
 }

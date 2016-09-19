@@ -6,8 +6,8 @@ import org.slf4j.LoggerFactory;
 import com.lubbo.core.network.ConnectionConstans;
 
 import io.netty.channel.ChannelHandler;
-import io.netty.channel.ChannelHandlerAdapter;
 import io.netty.channel.ChannelHandlerContext;
+import io.netty.channel.ChannelInboundHandlerAdapter;
 import io.netty.channel.ChannelInitializer;
 import io.netty.channel.ChannelPipeline;
 import io.netty.channel.socket.SocketChannel;
@@ -18,6 +18,7 @@ import io.netty.handler.timeout.IdleStateEvent;
  * @version on 15/11/1.
  */
 public class DefaultChannelInitializer extends ChannelInitializer<SocketChannel> {
+    private static final Logger LOGGER = LoggerFactory.getLogger(DefaultChannelInitializer.class);
     private final ChannelHandler channelHandler;
     private int readIdleTimeout = ConnectionConstans.DEFAULT_READTIMEOUT;
     private int writeIdleTimeout = ConnectionConstans.DEFAULT_WRITETIMEOUT;
@@ -60,25 +61,23 @@ public class DefaultChannelInitializer extends ChannelInitializer<SocketChannel>
      * IdleEvent事件处理类，收到IdleStateEvent后则将ChannelHandlerContext关闭
      *
      * @author mozhu
+     *
      */
     @Sharable
-    private static class IdleEventHandler extends ChannelHandlerAdapter {
+    private class IdleEventHandler extends ChannelInboundHandlerAdapter {
 
-        private static final IdleEventHandler INSTANCE = new IdleEventHandler();
-
-        private final Logger logger = LoggerFactory.getLogger(this.getClass());
-
-//        @Override
+        @Override
         public void userEventTriggered(ChannelHandlerContext ctx, Object evt) throws Exception {
             if (evt instanceof IdleStateEvent) {
                 IdleStateEvent event = (IdleStateEvent) evt;
-                //todo 心跳
                 switch (event.state()) {
                     default:
-                        break;
+                        LOGGER.warn(event.state() + " ,channel closed.");
+                        ctx.close();
                 }
             }
         }
+
     }
 
     public void setAdaptor(NettyCodecAdaptor adaptor) {

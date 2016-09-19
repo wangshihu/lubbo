@@ -6,12 +6,12 @@
     <aop:aspectj-autoproxy proxy-target-class="true"/>
     <bean id="referServiceFactory" abstract="true"
       class="com.lubbo.client.ReferServiceFactory">
-    <property name="proxyFactory" ref="delegateProxyFactory"></property>
-    <property name="invokerFactory" ref="invokerFactory"></property>
+        <property name="proxyFactory" ref="delegateProxyFactory"/>
+        <property name="invokerFactory" ref="invokerFactory"/>
     </bean>
 
-    <bean id="invokerFactory" class="com.lubbo.client.network.ClientInvokerFactory">
-        <property name="registry" ref="registry"></property>
+    <bean id="invokerFactory" class="com.lubbo.client.cluster.ClusterInvokerFactory">
+        <property name="registry" ref="registry"/>
     </bean>
 
 

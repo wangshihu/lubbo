@@ -2,16 +2,10 @@
 <beans xmlns="http://www.springframework.org/schema/beans"
        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
        xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
-    <!--server的配置ip和端口-->
-    <bean id="serverConfig" class="com.lubbo.server.ServerConfig">
-        <property name="ip" value="${lubbo.server.ip}"/>
-        <property name="port" value="${lubbo.server.port}"/>
-    </bean>
     <!--@lubbo注解扫描器-->
     <bean id="lubboScanner" class="com.lubbo.server.LubboScanner">
         <property name="exposeListener" ref="multiExposerListener"/>
         <property name="invokerFactory" ref="proxyInvokerFactory"/>
-        <property name="serverConfig" ref="serverConfig"/>
     </bean>
     <!--server端的invoker工厂-->
     <bean id="proxyInvokerFactory" class="com.lubbo.server.ProxyInvokerFactory">

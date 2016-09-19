@@ -1,30 +1,32 @@
 package com.lubbo.core.registry;
 
-
-import static com.lubbo.common.Constants.*;
+import static com.lubbo.common.LubboConstants.ZK_ROOT;
+import static com.lubbo.common.LubboConstants.ZK_SEPARATOR;
 
 /**
- * Created by benchu on 15/10/21.
+ * @author benchu
+ * @version on 15/10/21.
  */
 public class URLS {
-
-    public static String getServiceUrl(String service){
-
-        StringBuilder builder = new StringBuilder(ZK_SEPARATOR+ZK_ROOT+ZK_SEPARATOR);
-        builder.append(service);
-        return builder.toString();
+    /**
+     * /lubbo/${service}
+     */
+    public static String serviceUrl(String service) {
+        return ZK_SEPARATOR + ZK_ROOT + ZK_SEPARATOR + service;
     }
 
-
-
-    public static String getIpUrl(String serviceUrl, boolean isProvider, String ip) {
-        StringBuilder builder = new StringBuilder(serviceUrl+ZK_SEPARATOR);
-        if(isProvider){
-            builder.append("providers");
-        }else{
-            builder.append("consumers");
-        }
-        builder.append(ZK_SEPARATOR+ip);
-        return builder.toString();
+    /**
+     * /lubbo/${service}/providers/ip
+     */
+    public static String providerIp(String serviceUrl, String ip) {
+        return serviceUrl + ZK_SEPARATOR + "providers" + ZK_SEPARATOR + ip;
     }
+
+    /**
+     * /lubbo/${service}/consumers/ip
+     */
+    public static String consumerIp(String serviceUrl, String ip) {
+        return serviceUrl + ZK_SEPARATOR + "consumers" + ZK_SEPARATOR + ip;
+    }
+
 }

@@ -13,14 +13,6 @@ import io.netty.buffer.ByteBuf;
  */
 public class LubboCodec {
     private SerializationFactory serializationFactory;
-    public static final int TYPE_POS = 4;
-    public static final int ACTION_POS = 5;
-    public static final int STATUS_POS = 6;
-    public static final int SERIALIZE_POS = 6;
-    public static final int REQUEST_ID_POS = 7;
-    public static final int DATA_LENGTH_POS = 16;
-    public static final int HEAD_LENGTH = 128;
-
     /**
      * 讲lubboMessage解析成协议数组
      */

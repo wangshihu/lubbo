@@ -1,5 +1,7 @@
 package com.lubbo.server;
 
+import java.io.IOException;
+
 import com.lubbo.common.proxy.ProxyFactory;
 import com.lubbo.core.Invocation;
 import com.lubbo.core.Invoker;
@@ -19,6 +21,11 @@ public class ProxyInvokerFactory implements InvokerFactory<ExposeConfig> {
         Object targetBean = config.getTargetBean();
         ProxyFactory.DelegateCaller delegateCaller= deleteInvokerFactory.getDelegateCaller(serviceClass);
         return new Invoker() {
+            @Override
+            public void close() throws IOException {
+
+            }
+
             @Override
             public Result invoke(Invocation invocation) {
                 Result result = new Result();

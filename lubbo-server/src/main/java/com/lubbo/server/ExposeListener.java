@@ -13,7 +13,6 @@ public interface ExposeListener extends Closeable {
     /**
      * 服务取消暴露监听
      *
-     * @param exposeConfig
      */
     void unexposed(ExposeConfig exposeConfig);
 }

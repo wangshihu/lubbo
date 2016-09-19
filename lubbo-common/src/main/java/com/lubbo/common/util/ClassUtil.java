@@ -18,7 +18,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- * Created by benchu on 15/10/21.
+ * @author  benchu
+ * @version on 15/10/21.
  */
 public class ClassUtil {
     private static final Logger log = LoggerFactory.getLogger(ClassUtil.class);
