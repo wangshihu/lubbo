@@ -8,7 +8,7 @@ import com.lubbo.core.Invoker;
 import com.lubbo.core.Result;
 
 /**
- * @author  benchu
+ * @author benchu
  * @version on 15/10/24.
  */
 public class InvokeInvocationHandler implements InvocationHandler {
@@ -25,8 +25,11 @@ public class InvokeInvocationHandler implements InvocationHandler {
     @Override
     public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
         String methodName = method.getName();
+        if(args==null){
+            args = new Object[0];
+        }
         // 处理Object中常见的方法
-        if (args == null || args.length == 0) {
+        if (args.length == 0) {
             if ("toString".equals(methodName)) {
                 return invoker.toString();
             } else if ("hashCode".equals(methodName)) {
@@ -38,30 +41,30 @@ public class InvokeInvocationHandler implements InvocationHandler {
             }
         }
 
-        Invocation invocation = new Invocation(method.getName(),service,args);
+        Invocation invocation = new Invocation(methodName, service, args);
 
         Result result = invoker.invoke(invocation);
 
-        Object value= result.recreate();
+        Object value = result.recreate();
         if (method.getReturnType().isPrimitive()) {
             // 为返回类型为基本数据类型，而返回值为null时，做适配
             if (value == null) {
                 if (Boolean.TYPE.equals(method.getReturnType())) {
                     value = Boolean.FALSE;
                 } else if (Character.TYPE.equals(method.getReturnType())) {
-                    value = Character.valueOf((char) 0);
+                    value = (char) 0;
                 } else if (Byte.TYPE.equals(method.getReturnType())) {
-                    value = Byte.valueOf((byte) 0);
+                    value = (byte) 0;
                 } else if (Short.TYPE.equals(method.getReturnType())) {
-                    value = Short.valueOf((short) 0);
+                    value = (short) 0;
                 } else if (Integer.TYPE.equals(method.getReturnType())) {
-                    value = Integer.valueOf(0);
+                    value = 0;
                 } else if (Long.TYPE.equals(method.getReturnType())) {
-                    value = Long.valueOf(0L);
+                    value = 0L;
                 } else if (Float.TYPE.equals(method.getReturnType())) {
-                    value = Float.valueOf(0F);
+                    value = 0F;
                 } else if (Double.TYPE.equals(method.getReturnType())) {
-                    value = Double.valueOf(0);
+                    value = 0d;
                 }
             }
         }

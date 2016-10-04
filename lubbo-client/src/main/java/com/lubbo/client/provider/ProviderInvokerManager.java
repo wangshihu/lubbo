@@ -1,6 +1,4 @@
-package com.lubbo.client;
-
-import com.lubbo.client.provider.Provider;
+package com.lubbo.client.provider;
 
 /**
  * @author benchu

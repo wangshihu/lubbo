@@ -11,7 +11,6 @@
 	<context:property-placeholder file-encoding="UTF-8"
 								  location="classpath:lubbo.properties"/>
     <import resource="classpath*:META-INF/lubbo/client/*.xml" />
-
     <import resource="classpath*:META-INF/lubbo/core/*.xml" />
 	<bean id="idRange" parent="referServiceFactory">
 		<property name="targetClass"  value="com.lubbo.demo.api.IdRange"/>

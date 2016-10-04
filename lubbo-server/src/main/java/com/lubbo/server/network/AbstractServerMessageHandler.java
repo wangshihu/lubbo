@@ -10,6 +10,7 @@ import com.lubbo.core.MsgHandler;
 import com.lubbo.core.Result;
 import com.lubbo.core.message.LubboMessage;
 import com.lubbo.core.message.MessageStatus;
+import com.lubbo.core.message.MessageType;
 import com.lubbo.core.network.MsgHandlerContext;
 
 /**
@@ -29,7 +30,11 @@ public abstract class AbstractServerMessageHandler implements
         Invoker invoker = invokerManager.getInvoker(invocation);
         Result result = invoker.invoke(invocation);
         //fixme 根据result的状态设置消息的状态.
-        LubboMessage<Result> response = new LubboMessage<>(request, MessageStatus.NORMAL);
+        LubboMessage<Result> response = new LubboMessage<>();
+        response.setMessageType(MessageType.RESULT);
+        response.setRequestId(request.getRequestId());
+        response.setSerializeType(request.getSerializeType());
+        response.setStatus(MessageStatus.NORMAL);
         response.setValue(result);
         ctx.respond(response);
     }

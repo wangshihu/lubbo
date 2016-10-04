@@ -18,13 +18,13 @@ public class RegistryListener implements ExposeListener {
 
     @Override
     public void expose(Invoker invoker, ExposeConfig exposeConfig) {
-        String serviceUrl = URLS.serviceUrl(exposeConfig.getService());
-        registry.createPersistentIfNeeded(serviceUrl + "/providers");
-        registry.createPersistentIfNeeded(serviceUrl + "/consumers");
+        String service = exposeConfig.getService();
+        registry.createPersistentIfNeeded(URLS.provider(service));
+        registry.createPersistentIfNeeded(URLS.consumer(service));
         //插入当前节点.
-        String ipUrl = URLS.providerIp(serviceUrl, LubboConstants.LOCAL_HOST);
+        String ipUrl = URLS.providerIp(exposeConfig.getService(), LubboConstants.LOCAL_HOST);
         String serverHost = ipUrl + ":" + LubboConstants.LUBBO_PORT;
-        registry.createEphemeral(serverHost);
+        registry.createEphemeralIfNeeded(serverHost);
     }
 
     @Override
@@ -38,6 +38,6 @@ public class RegistryListener implements ExposeListener {
 
     @Override
     public void close() throws IOException {
-        registry.doClose();
+        registry.close();
     }
 }

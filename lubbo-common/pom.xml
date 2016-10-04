@@ -43,7 +43,10 @@
             <groupId>commons-io</groupId>
             <artifactId>commons-io</artifactId>
         </dependency>
-
+        <dependency>
+            <groupId>com.benchu.lu</groupId>
+            <artifactId>lu-utils</artifactId>
+        </dependency>
     </dependencies>
 
 </project>

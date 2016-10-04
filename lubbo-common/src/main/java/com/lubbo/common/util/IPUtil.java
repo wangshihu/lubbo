@@ -53,6 +53,12 @@ public class IPUtil {
         }
     }
 
+    public static InetSocketAddress parseToSocketAddress(String hostPort) {
+        String[] parts = hostPort.split(":", 2);
+        return new InetSocketAddress(parts[0], Integer.parseInt(parts[1]));
+
+    }
+
     public static int getAvailablePort(int begin) {
         boolean flag = isPortAvailable(begin);
         for (; !flag; begin++) {

@@ -1,15 +1,12 @@
 package com.lubbo.client.cluster;
 
-import java.util.List;
-
-import org.apache.curator.framework.recipes.cache.PathChildrenCacheListener;
-
+import com.lubbo.client.Dictionary;
 import com.lubbo.client.ReferConfig;
-import com.lubbo.common.LubboConstants;
+import com.lubbo.client.loadBalance.LoadBalance;
+import com.lubbo.client.provider.Provider;
 import com.lubbo.core.Invoker;
 import com.lubbo.core.InvokerFactory;
-import com.lubbo.core.registry.URLS;
-import com.lubbo.core.registry.ZkRegistry;
+import com.lubbo.core.InvokerLookUp;
 
 /**
  * @author benchu
@@ -17,39 +14,31 @@ import com.lubbo.core.registry.ZkRegistry;
  */
 public class ClusterInvokerFactory implements InvokerFactory<ReferConfig> {
 
-    private ZkRegistry<PathChildrenCacheListener> registry;
+    private InvokerLookUp<Provider> invokerLookUp;
+
+    private Dictionary dictionary;
+
+    private LoadBalance loadBalance;
 
     @Override
-    public Invoker newInvoker(ReferConfig referConfig) {
-        String serviceUrl = URLS.serviceUrl(referConfig.getTargetClass().getName());
-        String ipUrl = URLS.consumerIp(serviceUrl, LubboConstants.LOCAL_HOST);
-        registry.createEphemeralIfNeeded(ipUrl);
-        String listenerPath = serviceUrl + LubboConstants.ZK_SEPARATOR + "providers";
-        List<String> providers = registry.getChildren(listenerPath);
-        ClusterInvoker invoker = new ClusterInvoker(providers);
-        registry.subscribe(listenerPath, (client, event) -> {
-            switch (event.getType()) {
-                case CHILD_ADDED:
-                    invoker.getCluster().addProvider(event.getData());
-                    break;
-                case CHILD_REMOVED:
-                    invoker.getCluster().removeProvider(event.getData());
-                    break;
-                case CHILD_UPDATED:
-                    invoker.getCluster().updateProvider(event.getData());
-                    break;
-                default:
-                    break;
-            }
-        });
+    public Invoker newInvoker(ReferConfig config) {
+        ClusterInvoker invoker = new ClusterInvoker();
+        dictionary.initService(config.getTargetClass().getName());
+        invoker.setDictionary(dictionary);
+        invoker.setLoadBalance(loadBalance);
+        invoker.setInvokerLookUp(invokerLookUp);
         return invoker;
     }
 
-    public ZkRegistry<PathChildrenCacheListener> getRegistry() {
-        return registry;
+    public void setInvokerLookUp(InvokerLookUp<Provider> invokerLookUp) {
+        this.invokerLookUp = invokerLookUp;
     }
 
-    public void setRegistry(ZkRegistry registry) {
-        this.registry = registry;
+    public void setDictionary(Dictionary dictionary) {
+        this.dictionary = dictionary;
+    }
+
+    public void setLoadBalance(LoadBalance loadBalance) {
+        this.loadBalance = loadBalance;
     }
 }

@@ -39,7 +39,6 @@ public class LubboCodecTest {
         assertEquals(message.getStatus(), MessageStatus.NORMAL);
         assertEquals(message.getRequestId(), requestId);
         assertEquals(message.getSerializeType(), SerializeType.FAST_JSON);
-        assertEquals(message.isRequest(), true);
         Invocation invocation = (Invocation) message.getValue();
         Assert.assertEquals(invocation.getAppName(), appName);
         Assert.assertEquals(invocation.getService(), service);
@@ -54,7 +53,6 @@ public class LubboCodecTest {
         ByteBuf out = UnpooledByteBufAllocator.DEFAULT.buffer();
         LubboMessage<Invocation> message = new LubboMessage<>();
         message.setRequestId(requestId);
-        message.setRequest(true);
         message.setStatus(MessageStatus.NORMAL);
         message.setMessageType(MessageType.INVOCATION);
         message.setSerializeType(SerializeType.FAST_JSON);

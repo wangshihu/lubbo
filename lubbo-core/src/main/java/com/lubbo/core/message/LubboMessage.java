@@ -68,12 +68,4 @@ public class LubboMessage<E> {
         this.value = value;
     }
 
-    public byte getActionByte() {
-        if (request) {
-            return 0;
-        } else {
-            return 1;
-        }
-    }
-
 }

@@ -3,6 +3,7 @@ package com.lubbo.client.cluster;
 import java.io.IOException;
 import java.util.List;
 
+import com.benchu.lu.utils.Asserts;
 import com.lubbo.client.Dictionary;
 import com.lubbo.client.loadBalance.LoadBalance;
 import com.lubbo.client.provider.Provider;
@@ -23,7 +24,9 @@ public class ClusterInvoker implements Invoker {
 
     @Override
     public Result invoke(Invocation invocation) {
-        List<Provider> providers = dictionary.getProviders(invocation.getService());
+        String service = invocation.getService();
+        List<Provider> providers = dictionary.getProviders(service);
+        Asserts.checkNotEmpty(providers, "service:" + service + ",providers cannot be null");
         Provider provider = loadBalance.select(providers, invocation);
         Invoker invoker = invokerLookUp.lookUp(provider);
         return invoker.invoke(invocation);
@@ -31,5 +34,17 @@ public class ClusterInvoker implements Invoker {
 
     @Override
     public void close() throws IOException {
+    }
+
+    public void setInvokerLookUp(InvokerLookUp<Provider> invokerLookUp) {
+        this.invokerLookUp = invokerLookUp;
+    }
+
+    public void setDictionary(Dictionary dictionary) {
+        this.dictionary = dictionary;
+    }
+
+    public void setLoadBalance(LoadBalance loadBalance) {
+        this.loadBalance = loadBalance;
     }
 }

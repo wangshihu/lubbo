@@ -11,4 +11,6 @@ import com.lubbo.client.provider.Provider;
 public interface Dictionary {
 
     List<Provider> getProviders(String service);
+
+    void initService(String service);
 }

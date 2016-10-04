@@ -65,4 +65,10 @@ public class RegistryTest extends AbstractZkTest {
         Assert.assertFalse(providers.contains("/lubbo/com.HelloWorld/providers/192.160:81"));
     }
 
+    @Test
+    public void test(){
+        ZKRegistryImpl registry = new ZKRegistryImpl("10.13.20.13:2181");
+        System.out.println(registry.getChildren("/lubbo/com.lubbo.demo.api.IdRange/providers"));
+    }
+
 }

@@ -24,35 +24,21 @@ public class ZKRegistryImpl implements ZkRegistry<PathChildrenCacheListener> {
 
     public ZKRegistryImpl(String host) {
         this.host = host;
-        client = CuratorFrameworkFactory.builder().connectString(host).sessionTimeoutMs(5000)
-                     .retryPolicy(new ExponentialBackoffRetry(1000, 3)).build();
+        client = CuratorFrameworkFactory.builder()
+                     .connectString(host)
+                     .sessionTimeoutMs(5000)
+                     .defaultData(null)
+                     .retryPolicy(new ExponentialBackoffRetry(1000, 3))
+                     .build();
         client.getConnectionStateListenable().addListener((curatorFramework, state) -> {
             //TODO listener
         });
         client.start();
     }
 
-    public void createPersistent(String path) {
-        try {
-            client.create().forPath(path);
-        } catch (KeeperException.NodeExistsException e) {
-        } catch (Exception e) {
-            throw new IllegalStateException(e.getMessage(), e);
-        }
-    }
-
     public void createPersistentIfNeeded(String path) {
         try {
             client.create().creatingParentsIfNeeded().forPath(path);
-        } catch (KeeperException.NodeExistsException e) {
-        } catch (Exception e) {
-            throw new IllegalStateException(e.getMessage(), e);
-        }
-    }
-
-    public void createEphemeral(String path) {
-        try {
-            client.create().withMode(CreateMode.EPHEMERAL).forPath(path);
         } catch (KeeperException.NodeExistsException e) {
         } catch (Exception e) {
             throw new IllegalStateException(e.getMessage(), e);
@@ -87,11 +73,20 @@ public class ZKRegistryImpl implements ZkRegistry<PathChildrenCacheListener> {
         }
     }
 
+    @Override
+    public byte[] getData(String path) {
+        try {
+            return client.getData().forPath(path);
+        } catch (Exception e) {
+            throw new IllegalStateException(e.getMessage(), e);
+        }
+    }
+
     public boolean isConnected() {
         return client.getZookeeperClient().isConnected();
     }
 
-    public void doClose() {
+    public void close() {
         client.close();
     }
 
@@ -99,9 +94,14 @@ public class ZKRegistryImpl implements ZkRegistry<PathChildrenCacheListener> {
         try {
             PathChildrenCache cache = pathChildrenCacheMap.get(path);
             if (cache == null) {
-                cache = new PathChildrenCache(client, path, true);
-                cache.start(PathChildrenCache.StartMode.POST_INITIALIZED_EVENT);
-                pathChildrenCacheMap.put(path, cache);
+                synchronized(pathChildrenCacheMap) {
+                    cache = pathChildrenCacheMap.get(path);
+                    if (cache == null) {
+                        cache = new PathChildrenCache(client, path, true);
+                        cache.start(PathChildrenCache.StartMode.POST_INITIALIZED_EVENT);
+                        pathChildrenCacheMap.put(path, cache);
+                    }
+                }
             }
             cache.getListenable().addListener(listener);
         } catch (Exception e) {

@@ -6,7 +6,6 @@ import java.util.concurrent.ConcurrentMap;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.lubbo.client.ProviderInvokerManager;
 import com.lubbo.common.util.IOUtils;
 import com.lubbo.core.Invoker;
 import com.lubbo.core.InvokerFactory;
@@ -19,6 +18,7 @@ import com.lubbo.core.InvokerLookUp;
 public class ProviderInvokerLookUp implements InvokerLookUp<Provider>, ProviderInvokerManager {
     private static final Logger LOGGER = LoggerFactory.getLogger(ProviderInvokerLookUp.class);
     private final ConcurrentMap<Provider, Invoker> providerInvokers = new ConcurrentHashMap<>();
+    //providerInvokerFactory
     private InvokerFactory<Provider> invokerFactory;
 
     @Override

@@ -19,8 +19,7 @@ public class ProviderInvokerFactory implements InvokerFactory<Provider> {
 
     @Override
     public Invoker newInvoker(Provider provider) {
-        ProviderInvoker invoker = new ProviderInvoker(provider);
-        return invoker;
+        return new ProviderInvoker(provider);
     }
 
     class ProviderInvoker implements Invoker {

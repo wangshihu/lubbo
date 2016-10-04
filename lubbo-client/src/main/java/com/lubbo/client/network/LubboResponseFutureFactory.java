@@ -12,6 +12,7 @@ import com.lubbo.core.message.LubboMessage;
  */
 public class LubboResponseFutureFactory implements
     ResponseFutureFactory<LubboMessage<Invocation>, LubboMessage<Result>> {
+
     private ResponseSubscribe<Long, LubboMessage<Result>> subscribe;
 
     @Override

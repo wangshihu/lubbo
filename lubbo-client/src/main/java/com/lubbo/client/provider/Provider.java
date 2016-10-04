@@ -20,6 +20,7 @@ public class Provider {
         this.weight = weight;
     }
 
+
     public InetSocketAddress getAddress() {
         return address;
     }
@@ -35,6 +36,8 @@ public class Provider {
     public void setWeight(int weight) {
         this.weight = weight;
     }
+
+
 
     @Override
     public boolean equals(Object o) {

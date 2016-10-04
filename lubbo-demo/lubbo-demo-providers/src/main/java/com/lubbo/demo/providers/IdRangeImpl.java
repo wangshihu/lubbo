@@ -1,15 +1,16 @@
 package com.lubbo.demo.providers;
 
-import java.lang.annotation.Annotation;
+import java.net.InetSocketAddress;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import org.springframework.stereotype.Service;
 
-import com.lubbo.demo.api.IdRange;
 import com.lubbo.core.annotation.Lubbo;
+import com.lubbo.demo.api.IdRange;
 
 /**
- * Created by benchu on 15/10/31.
+ * @author benchu
+ * @version on 15/10/31.
  */
 @Service("IdRange")
 @Lubbo
@@ -20,11 +21,11 @@ public class IdRangeImpl implements IdRange {
     public int getId() {
         return generator.getAndIncrement();
     }
+
     public static void main(String[] args) {
-        IdRangeImpl idRange = new IdRangeImpl();
-        Annotation[] anootations = idRange.getClass().getAnnotations();
-        System.out.println(anootations.length);
+
     }
+
 }
 
 

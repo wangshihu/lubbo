@@ -4,15 +4,48 @@
        xsi:schemaLocation="http://www.springframework.org/schema/beans
 	http://www.springframework.org/schema/beans/spring-beans-4.0.xsd http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop.xsd">
     <aop:aspectj-autoproxy proxy-target-class="true"/>
-    <bean id="referServiceFactory" abstract="true"
-      class="com.lubbo.client.ReferServiceFactory">
+    <bean id="referServiceFactory" abstract="true" class="com.lubbo.client.ReferServiceFactory">
         <property name="proxyFactory" ref="delegateProxyFactory"/>
-        <property name="invokerFactory" ref="invokerFactory"/>
+        <property name="invokerFactory" ref="clusterInvokerFactory"/>
+    </bean>
+    <!--client message handler-->
+    <bean id="responseMessageHandler" class="com.lubbo.client.network.ResponseMessageHandler"/>
+
+    <!--传输层的抽象client-->
+    <bean id="client" factory-bean="nettyNioTransport" factory-method="getClient">
+        <constructor-arg ref="responseMessageHandler"/>
     </bean>
 
-    <bean id="invokerFactory" class="com.lubbo.client.cluster.ClusterInvokerFactory">
-        <property name="registry" ref="registry"/>
+
+    <bean id="responseFutureFactory" class="com.lubbo.client.network.LubboResponseFutureFactory">
+        <property name="subscribe" ref="responseMessageHandler"/>
     </bean>
 
+    <bean id="exchangerFactory" class="com.lubbo.client.network.LubboMsgExchangerFactory">
+        <property name="client" ref="client"/>
+        <property name="responseFutureFactory" ref="responseFutureFactory"/>
+    </bean>
+
+
+
+    <bean id="providerInvokerFactory" class="com.lubbo.client.provider.ProviderInvokerFactory">
+        <property name="exchangerFactory" ref="exchangerFactory"/>
+    </bean>
+
+    <bean id="providerInvokerLookUp" class="com.lubbo.client.provider.ProviderInvokerLookUp">
+        <property name="invokerFactory" ref="providerInvokerFactory"/>
+    </bean>
+
+    <bean id="dictionary" class="com.lubbo.client.cluster.ZKDictionary">
+        <property name="zkRegistry" ref="registry"/>
+        <property name="providerInvokerManager" ref="providerInvokerLookUp"/>
+    </bean>
+
+    <bean id="roundRobinLoadBalance" class="com.lubbo.client.loadBalance.RoundRobinLoadBalance"/>
+    <bean id="clusterInvokerFactory" class="com.lubbo.client.cluster.ClusterInvokerFactory">
+        <property name="dictionary" ref="dictionary"/>
+        <property name="invokerLookUp" ref="providerInvokerLookUp"/>
+        <property name="loadBalance" ref="roundRobinLoadBalance"/>
+    </bean>
 
 </beans>

@@ -10,13 +10,14 @@ import com.lubbo.core.Invoker;
 import com.lubbo.core.InvokerFactory;
 
 /**
- * @author  benchu
+ * @author benchu
  * @version on 15/10/24.
  */
 
 public class ReferServiceFactory<T> implements FactoryBean<T> {
 
     private ProxyFactory proxyFactory;
+    // ClusterInvokerFactory
     private InvokerFactory<ReferConfig> invokerFactory;
     private Class<T> targetClass;
 
@@ -25,12 +26,11 @@ public class ReferServiceFactory<T> implements FactoryBean<T> {
         return this.newInstance();
     }
 
-
-    private T newInstance(){
+    private T newInstance() {
         ReferConfig<T> referConfig = new ReferConfig<>(targetClass);
         Invoker invoker = invokerFactory.newInvoker(referConfig);
-        InvocationHandler invocationHandler = new InvokeInvocationHandler(targetClass.getName(),invoker);
-        return proxyFactory.proxy(targetClass,invocationHandler);
+        InvocationHandler invocationHandler = new InvokeInvocationHandler(targetClass.getName(), invoker);
+        return proxyFactory.proxy(targetClass, invocationHandler);
     }
 
     @Override
@@ -43,24 +43,12 @@ public class ReferServiceFactory<T> implements FactoryBean<T> {
         return true;
     }
 
-    public ProxyFactory getProxyFactory() {
-        return proxyFactory;
-    }
-
     public void setProxyFactory(ProxyFactory proxyFactory) {
         this.proxyFactory = proxyFactory;
     }
 
-    public InvokerFactory getInvokerFactory() {
-        return invokerFactory;
-    }
-
     public void setInvokerFactory(InvokerFactory invokerFactory) {
         this.invokerFactory = invokerFactory;
-    }
-
-    public Class<T> getTargetClass() {
-        return targetClass;
     }
 
     public void setTargetClass(Class<T> targetClass) {

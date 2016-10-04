@@ -27,7 +27,6 @@ public class LubboCodec {
         out.writeInt(totalLength);// 此处只做占位 待数据写入完毕后修改此处的值
 
         out.writeByte((byte) message.getMessageType().getId());
-        out.writeByte(message.getActionByte());
         out.writeByte((byte) message.getSerializeType().getId());
         out.writeByte((byte) message.getStatus().getId());
         out.writeLong(message.getRequestId());
@@ -48,7 +47,6 @@ public class LubboCodec {
         //获得基本信息
         int totalLength = in.readInt();
         MessageType messageType = MessageType.get(in.readByte());
-        result.setRequest((in.readByte() == 0));
         result.setMessageType(messageType);
         SerializeType serializeType = SerializeType.get(in.readByte());
         result.setSerializeType(serializeType);

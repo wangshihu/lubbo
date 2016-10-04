@@ -32,6 +32,7 @@ public class DefaultChannelInitializer extends ChannelInitializer<SocketChannel>
         this.readIdleTimeout = readIdleTimeout;
         this.writeIdleTimeout = writeIdleTimeout;
         this.idleTimeout = idleTimeout;
+        this.adaptor = adaptor;
     }
 
     public DefaultChannelInitializer(int writeIdleTimeout, NettyCodecAdaptor adaptor, ChannelHandler channelHandler) {
