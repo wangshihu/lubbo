@@ -5,8 +5,6 @@ import java.io.Closeable;
 /**
  * Channel
  *
- * @author mozhu
- *
  */
 public interface Channel extends Closeable {
 

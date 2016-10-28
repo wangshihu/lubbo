@@ -44,7 +44,7 @@ public class NamedThreadFactory implements ThreadFactory {
             throw new NullPointerException("Your prefix is Blank!");
         }
         final String suffix = "-thread-";
-        this.prefix = new StringBuilder(prefix.length() + suffix.length()).append(prefix).append(suffix).toString();
+        this.prefix = prefix + suffix;
         this.daemo = daemon;
         final SecurityManager s = System.getSecurityManager();
         this.threadGroup = (s == null) ? Thread.currentThread().getThreadGroup() : s.getThreadGroup();
@@ -59,16 +59,10 @@ public class NamedThreadFactory implements ThreadFactory {
         return th;
     }
 
-    /**
-     * @return the threadNum
-     */
     public AtomicInteger getThreadNum() {
         return threadNum;
     }
 
-    /**
-     * @return the threadGroup
-     */
     public ThreadGroup getThreadGroup() {
         return threadGroup;
     }
